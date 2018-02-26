@@ -1,32 +1,18 @@
 // Requiring in the node modules needed to run this app
 var inquirer = require("inquirer");
 var connection = require("./connection");
+var inventory = require("./inventory");
 
 // Connecting to the database and then running the outputTable function
 connection.connect(function (err) {
     if (err) throw err;
     // Welcomes customer to Bamazon
     console.log("Hello and Welcome to Bamazon.\nHere is a list of the items we have for sale:\n");
-    // Start the function to output the wares
-    outputTable();
+
+    // Function that will output Bamazon's wares then will prompt user to choose item then starts promptUser function
+    inventory("Customer", promptUser);
+
 });
-
-// Function that will output Bamazon's wares then will prompt user to choose item
-var outputTable = function () {
-
-    // Query to pull all the products listed in bamazonDB
-    var query = connection.query("SELECT * FROM products", function (err, res) {
-        if (err) throw err;
-
-        // Loop to output all the items
-        for (i = 0; i < res.length; i++) {
-            console.log("Item ID: " + res[i].item_id + "\nProduct: " + res[i].product_name + "\nPrice: " + res[i].price +"\n\n");
-        }
-
-        // Function that will prompt user to choose an item
-        promptUser();
-    });
-}
 
 // Function that will prompt the user to choose an item and the number of that item they want
 var promptUser = function () {
