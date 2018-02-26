@@ -55,7 +55,7 @@ var promptUser = function () {
             }, function (err, res) {
                 if (err) throw err;
                 var itemName = res[0].product_name;
-                if (parseInt(res[0].stock_quantity) - parseInt(answers.units) > 0) {
+                if (parseInt(res[0].stock_quantity) - parseInt(answers.units) >= 0) {
                     var query = connection.query(
                         "UPDATE products SET ? WHERE ?",
                         [
