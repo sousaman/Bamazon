@@ -1,5 +1,9 @@
 // Requiring in the node modules needed to run this app
 var mysql = require("mysql");
+var Credentials = require("./credentials");
+
+// Creating credentials
+var credentials = new Credentials();
 
 // Establishing the connection to the bamazonDB database
 var connection = mysql.createConnection({
@@ -7,10 +11,10 @@ var connection = mysql.createConnection({
     port: 3306,
 
     // Your username
-    user: "",
+    user: credentials.user,
 
     // Your password
-    password: "",
+    password: credentials.password,
     database: "bamazonDB"
 });
 

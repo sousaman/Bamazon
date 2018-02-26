@@ -1,7 +1,7 @@
 # Bamazon
 
 ## Description
-Bamazon is a 3 phase app. There are applications for customers, managers, and supervisors. (To successfully run this, you will need to create a MySQL server running locally, and then you will need to run the script in the bamazonDB.sql file to create the database. Also, the user and password settings in the connectionCredentials.js file will need to be adjusted so all 3 phases of the app will work)
+Bamazon is a 3 phase app. There are applications for customers, managers, and supervisors. (To successfully run this, you will need to create a MySQL server running locally, and then you will need to run the script in the bamazonDB.sql file to create the database. Also, the user and password will need to be fed in by creating a Credentials constructor that holds both values which is then fed into connection.js so all 3 phases of the app will work)
 
 ### Bamazon Customers
 For customers to buy items, they must run bamazonCustomer.js. This will welcome them and output Bamazon's current wares. It will then prompt the customer to choose the item id of the products listed.

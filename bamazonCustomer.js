@@ -1,6 +1,6 @@
 // Requiring in the node modules needed to run this app
 var inquirer = require("inquirer");
-var connection = require("./connectionCredentials.js");
+var connection = require("./connection");
 
 // Connecting to the database and then running the outputTable function
 connection.connect(function (err) {
