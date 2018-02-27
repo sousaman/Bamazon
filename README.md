@@ -20,6 +20,7 @@ Otherwise, the user will be told there isn't enough stock to fulfill their order
 ### Bamazon Managers
 
 Our Bamazon Manager have the ability to do one of four actions. The app will prompt them for which one they want to do:
+
 * View Products for Sale - This will print out all of the products that Bamazon has for sale, including the quantity we have in stock
 
 ![Alt text](/images/manager/Products.gif?raw=true "View Products")
@@ -45,4 +46,15 @@ Our Bamazon Manager have the ability to do one of four actions. The app will pro
 
 ### Bamazon Supervisors
 
-Work in progress.
+Our Bamazon Supervisors are in charge of managing the departments, therefore; their app only has 2 actions.
+
+* View Product Sales by Department - This will print out a fun profit/loss data from the departments table in our bamazonDB. Only the departments with products in the products table will be output.
+
+![Alt text](/images/supervisor/Sales.gif?raw=true "View Sales by Department")
+
+* Create New Department - This allows out Bamazon supervisors to add more departments. (In the example below, there is already a product in the No Fun Police department with product sales)
+
+![Alt text](/images/supervisor/NewDept.gif?raw=true "Create New Department")
+![Alt text](/images/supervisor/NewDept2.gif?raw=true "Create New Department 2")
+
+Enjoy using our service!

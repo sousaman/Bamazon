@@ -2,12 +2,13 @@
 var inquirer = require("inquirer");
 var connection = require("./connection");
 var inventory = require("./inventory");
+var colors = require('colors');
 
 // Connecting to the database and then running the outputTable function
 connection.connect(function (err) {
     if (err) throw err;
     // Welcomes customer to Bamazon
-    console.log("Hello and Welcome to Bamazon.\nHere is a list of the items we have for sale:\n");
+    console.log("Hello and Welcome to Bamazon.\nHere is a list of the items we have for sale:\n".rainbow);
 
     // Function that will output Bamazon's wares then will prompt user to choose item then starts promptUser function
     inventory("Customer", promptUser);
@@ -35,24 +36,33 @@ var promptUser = function () {
         }
     ]).then(function (answers) {
         // Once the user answers both of the above question, query bamazonBD for the item ID chosen
-        var query = connection.query("SELECT stock_quantity, product_name FROM products WHERE ?",
+        var query = connection.query("SELECT stock_quantity, product_name, product_sales, price FROM products WHERE ?",
             {
                 item_id: answers.itemId
             }, function (err, res) {
                 if (err) throw err;
 
-                // Save the product name of the item
+                // Output to customer total price for the number of units they ordered of the product they selected
+                var cost = parseFloat(res[0].price) * parseInt(answers.units);
+
+                // Save additional results of the query
+                var unitsRemaining = parseInt(res[0].stock_quantity) - parseInt(answers.units);
                 var itemName = res[0].product_name;
+                var productSales = parseFloat(res[0].product_sales);
+                var totalProductSales = productSales + cost;
+
+
 
                 // If there is enough stock to fulfill request, process this code
-                if (parseInt(res[0].stock_quantity) - parseInt(answers.units) >= 0) {
+                if (unitsRemaining >= 0) {
 
                     // Query database to update the stock of the item being ordered
                     var query = connection.query(
                         "UPDATE products SET ? WHERE ?",
                         [
                             {
-                                stock_quantity: (parseInt(res[0].stock_quantity) - parseInt(answers.units)).toFixed(2)
+                                stock_quantity: unitsRemaining,
+                                product_sales: totalProductSales
                             },
                             {
                                 item_id: answers.itemId
@@ -60,26 +70,15 @@ var promptUser = function () {
                         ],
                         function (err, res) {
                             if (err) throw err;
-
-                            // Query to pull price of the item being ordered
-                            var query = connection.query("SELECT price FROM products WHERE ?",
-                                {
-                                    item_id: answers.itemId
-                                }, function (err, res) {
-                                    if (err) throw err;
-
-                                    // Output to customer total price for the number of units they ordered of the product they selected
-                                    var cost = parseFloat(res[0].price) * parseInt(answers.units);
-                                    console.log("\nYou have purchased " + answers.units + " of " + itemName + "s for " + cost.toFixed(2) + "\n");
-                                    connection.end();
-                                });
+                            console.log(String("\nYou have purchased " + answers.units + " of " + itemName + "s for " + cost.toFixed(2) + "\n").america);
+                            connection.end();
                         }
                     );
                 }
 
                 // If there isn't enough stock to fulfill the user's request, evaluate this code
                 else {
-                    console.log("Your order exceeds what we can currently fulfill. Please adjust the units you are asking for and try agian.");
+                    console.log("Your order exceeds what we can currently fulfill. Please adjust the units you are asking for and try agian.".red);
                     connection.end();
                 }
             });

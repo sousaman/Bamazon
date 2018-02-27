@@ -10,6 +10,7 @@ connection.connect(function (err) {
     promptManagers();
 });
 
+// Function to prompt the managers for the action they want to take
 var promptManagers = function () {
     inquirer.prompt([
         {
@@ -19,6 +20,8 @@ var promptManagers = function () {
             type: "rawlist"
         }
     ]).then(function (answers) {
+
+        // Switch-case statement to take the action the manager chooses to take
         switch (answers.action) {
 
             case "View Products for Sale":
@@ -42,15 +45,24 @@ var promptManagers = function () {
     })
 }
 
+// Function to add items to the inventory of an item that already exist in bamazonDB
 var addToInventory = function () {
+
+    // Initializing arrays to store values returned from query of bamazonDB
     var currentInventory = [];
     var currentQuantity = [];
+
+    // Query to pull all products from bamazonDB
     var query = connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
+
+        // Loop to store all the products returned from query
         for (i = 0; i < res.length; i++) {
             currentInventory.push(res[i].product_name + "-" + res[i].item_id);
             currentQuantity.push(res[i].stock_quantity);
         }
+
+        // Prompts manager to select the item they want to add inventory to and the number they want to add
         inquirer.prompt([
             {
                 name: "items",
@@ -74,6 +86,8 @@ var addToInventory = function () {
             var inventoryName = splitInventory[0];
             var inventoryId = splitInventory[1];
             var currentStock = currentQuantity[currentInventory.indexOf(answers.items)];
+
+            // Query to update bamazonDB with products
             connection.query("UPDATE products SET ? WHERE ?",
                 [
                     {
@@ -85,6 +99,8 @@ var addToInventory = function () {
                 ],
                 function (err, res) {
                     if (err) throw err;
+
+                    // Output to manager
                     console.log(answers.units + " units of " + inventoryName + " successfully added to inventory");
                     connection.end();
                 }
@@ -94,6 +110,8 @@ var addToInventory = function () {
 }
 
 var addProduct = function () {
+
+    // Prompts manager for the necessary information to add a product
     inquirer.prompt([
         {
             name: "name",
@@ -115,6 +133,8 @@ var addProduct = function () {
             message: "How much of this product will we have in stock?",
         }
     ]).then(function (answer) {
+
+        // Query to add product to bamazonDB
         var query = connection.query(
             "INSERT INTO products SET ?",
             {
@@ -124,6 +144,8 @@ var addProduct = function () {
                 stock_quantity: parseFloat(answer.quantity)
             },
             function (err, res) {
+
+                // Output to manager
                 console.log(res.affectedRows + " product inserted!\n");
                 connection.end();
             }
